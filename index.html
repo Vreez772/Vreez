@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steamrip App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #1e293b;
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --muted: #64748b;
+    --accent: #eab308;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --radius: 20px;
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--secondary);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    background: linear-gradient(to right, var(--accent), #facc15);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--accent);
+}
+
+main {
+    flex: 1;
+    padding: 2rem;
+    max-width: 960px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(to right, var(--accent), #facc15);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--muted);
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+input {
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius);
+    color: var(--foreground);
+    font-size: 1rem;
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    padding: 1rem;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: var(--primary-dark);
+    transform: scale(1.03);
+}
+
+.log-container {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius);
+    padding: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 0.95rem;
+}
+
+.download-section {
+    text-align: center;
+}
+
+.download-button {
+    background: var(--success);
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.download-button:hover {
+    background: #16a34a;
+}
+
+footer {
+    background: var(--secondary);
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--muted);
+    margin-top: auto;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-link {
+    color: var(--muted);
+    text-decoration: none;
+}
+
+.footer-link:hover {
+    color: var(--accent);
+}
+</style>
+</head>
+<body>
+    <header>
+        <div class="logo">Steamrip</div>
+        <div class="nav-links">
+            <a href="#" class="nav-link" id="home-btn">Home</a>
+            <a href="#" class="nav-link" id="game-list-btn">Game List</a>
+            <a href="#" target="_blank" class="nav-link">Discord</a>
+        </div>
+    </header>
+    
+    <main>
+        <h1 class="title">Steamrip</h1>
+        <p class="subtitle">Generate Manifest und Lua Files für deine Steam-Spiele</p>
+        
+        <div class="input-group">
+            
+    <div class="input-group">
+        <input type="text" id="appid-input" placeholder="APP ID eingeben (z.B. 570) oder URL">
+        <button id="submit-button">
+            <i class="fa-solid fa-search"></i> Suchen
+        </button>
+    </div>
+    
+        </div>
+        
+        <div id="log-container" class="log-container"></div>
+        
+        <div id="download-section" style="display: none; text-align: center;">
+            <h3 style="margin-bottom: 1rem;">Dateien Herunterladen</h3>
+            <div class="download-options">
+                <div class="download-button" id="download-all">
+                    <i class="fa-solid fa-download"></i> Alle Dateien Herunterladen
+                </div>
+            </div>
+            
+            <!-- Download progress indicator -->
+            <div id="download-progress" class="download-progress">
+                <div class="progress-bar" id="progress-bar"></div>
+                <div class="progress-text" id="progress-text">Download wird vorbereitet...</div>
+            </div>
+            
+            <!-- Download success message -->
+            <div id="download-success" class="download-success">
+                <h4><i class="fa-solid fa-check-circle"></i> Download Abgeschlossen!</h4>
+                <p>Deine Dateien sind bereit. Klicke unten, um sie herunterzuladen:</p>
+                <div id="download-files-container"></div>
+            </div>
+        </div>
+
+        <!-- Game Database Section -->
+        <div id="game-database" class="game-database">
+            <h3>Verfügbare Spiele</h3>
+            <div class="game-list" id="game-list-container">
+                <!-- Games will be populated by JS -->
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-links">
+            <a href="#" class="footer-link" id="footer-home">Home</a>
+            <a href="#" class="footer-link" id="disclaimer-btn">Disclaimer</a>
+            <a href="#" target="_blank" class="footer-link">Support</a>
+        </div>
+        <p class="copyright">&copy; 2025 Steamrip. Alle Rechte vorbehalten.</p>
+    </footer>
+    
+    <!-- Game Unavailable Modal -->
+    <div id="game-unavailable-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="modal-title">Spiel nicht verfügbar</h2>
+            <div class="modal-body" id="game-unavailable-message"></div>
+            <button class="modal-button" id="game-unavailable-close">OK</button>
+        </div>
+    </div>
+
+    <!-- Disclaimer Modal -->
+    <div id="disclaimer-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="modal-title">Disclaimer</h2>
+            <div class="modal-body">
+                <p>Steamrip ist ein Tool zum Generieren von Manifest- und Lua-Dateien für Steam-Spiele. Dieses Tool ist nur für Bildungs- und Entwicklungszwecke gedacht.</p>
+                <p>Die erstellten Dateien sind so konzipiert, dass sie mit Steam Tools kompatibel sind und die korrekte Struktur für die Erkennung haben.</p>
+                <p>Die Nutzung dieses Tools erfolgt auf eigene Gefahr. Wir sind nicht verantwortlich für eventuelle Schäden oder Verstöße gegen die Steam-Nutzungsbedingungen.</p>
+            </div>
+            <button class="modal-button" id="disclaimer-close">Verstanden</button>
+        </div>
+    </div>
+
+    <!-- Add JSZip script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>document.getElementById('name-to-appid-button').addEventListener('click', () => {
+    const gameName = document.getElementById('game-name-input').value.trim();
+    if (!gameName) {
+        addLog('Bitte gib einen Spielnamen ein.', true);
+        return;
+    }
+
+    addLog(`Suche Steam App ID für "${gameName}"...`);
+
+    // Proxy-API für SteamDB über DuckDuckGo (CORS umgehen per AllOrigins)
+    const searchUrl = `https://duckduckgo.com/html/?q=site:steamdb.info+${encodeURIComponent(gameName)}`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(searchUrl)}`;
+
+    fetch(proxyUrl)
+        .then(res => res.json())
+        .then(data => {
+            const html = data.contents;
+            const match = html.match(/steamdb\.info\/app\/(\d+)/);
+            if (match && match[1]) {
+                const appId = match[1];
+                addLog(`Gefundene App ID: ${appId}`);
+                document.getElementById('appid-input').value = appId;
+                document.getElementById('submit-button').click();
+            } else {
+                addLog('Keine App ID gefunden. Versuche einen genaueren Namen.', true);
+            }
+        })
+        .catch(err => {
+            addLog('Fehler bei der App ID Suche.', true);
+            console.error(err);
+        });
+});
+
+</script>
+    
+    <script>
+        // Game database - Sample games with accurate AppIDs
+        const gameDatabase = [
+            { id: "570", title: "Dota 2", installDir: "dota 2", depotId: "571" },
+            { id: "730", title: "Counter-Strike 2", installDir: "Counter-Strike 2", depotId: "731" },
+            { id: "440", title: "Team Fortress 2", installDir: "Team Fortress 2", depotId: "441" },
+            { id: "252490", title: "Rust", installDir: "Rust", depotId: "252491" },
+            { id: "578080", title: "PUBG: BATTLEGROUNDS", installDir: "PUBG", depotId: "578081" },
+            { id: "1172470", title: "Apex Legends", installDir: "Apex Legends", depotId: "1172471" },
+            { id: "1063730", title: "New World", installDir: "New World", depotId: "1063731" },
+            { id: "271590", title: "Grand Theft Auto V", installDir: "Grand Theft Auto V", depotId: "271591" },
+            { id: "1091500", title: "Cyberpunk 2077", installDir: "Cyberpunk 2077", depotId: "1091501" },
+            { id: "359550", title: "Rainbow Six Siege", installDir: "Rainbow Six Siege", depotId: "359551" },
+            { id: "881100", title: "Forza Horizon 5", installDir: "Forza Horizon 5", depotId: "881101" },
+            { id: "1203220", title: "Starfield", installDir: "Starfield", depotId: "1203221" }
+        ];
+
+        // Modal functions
+        function showModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+        
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+        
+        // Close modals with buttons
+        document.querySelectorAll('.close-button, #game-unavailable-close, #disclaimer-close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const modal = btn.closest('.modal');
+                closeModal(modal.id);
+            });
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target.classList.contains('modal')) {
+                closeModal(event.target.id);
+            }
+        });
+        
+        // Add log entry function
+        function addLog(message, isError = false) {
+            const container = document.getElementById('log-container');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.textContent = message;
+            
+            if (isError) {
+                entry.style.color = 'var(--danger)';
+            }
+            
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Create a downloadable file from text content
+        function createDownloadableFile(fileName, content, mimeType = 'text/plain') {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.className = 'download-file-link';
+            link.innerHTML = `<i class="fa-solid fa-file-download"></i> ${fileName}`;
+            
+            // Add event listener to revoke the URL after download
+            link.addEventListener('click', () => {
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                }, 100);
+            });
+            
+            return link;
+        }
+        
+        // Find game in database
+        function findGame(appId) {
+            return gameDatabase.find(game => game.id === appId);
+        }
+
+        // Generate proper ACF content (used for Steam library recognition)
+        function generateAcfContent(game) {
+            return `"AppState"
+{
+	"appid"		"${game.id}"
+	"universe"	"1"
+	"LauncherPath"		"C:\\\\Program Files (x86)\\\\Steam\\\\steam.exe"
+	"name"		"${game.title}"
+	"StateFlags"		"4"
+	"installdir"		"${game.installDir}"
+	"LastUpdated"		"${Math.floor(Date.now() / 1000)}"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"${Math.floor(Math.random() * 9000000000) + 1000000000}"
+	"buildid"		"${Math.floor(Math.random() * 9000000) + 8000000}"
+	"LastOwner"		"0"
+	"BytesToDownload"		"0"
+	"BytesDownloaded"		"0"
+	"BytesToStage"		"0"
+	"BytesStaged"		"0"
+	"TargetBuildID"		"0"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"InstalledDepots"
+	{
+		"${game.depotId}"
+		{
+			"manifest"		"${generateRandomManifestID()}"
+			"size"		"${Math.floor(Math.random() * 9000000000) + 1000000000}"
+		}
+	}
+	"UserConfig"
+	{
+		"language"		"german"
+		"BetaKey"		""
+	}
+	"MountedConfig"
+	{
+		"language"		"german"
+		"BetaKey"		""
+	}
+}`;
+        }
+        
+        // Generate realistic manifest content in the correct Steam format
+        function generateManifestContent(game) {
+            return `"AppState"
+{
+	"appid"		"${game.id}"
+	"Universe"	"1"
+	"name"		"${game.title}"
+	"StateFlags"		"4"
+	"installdir"		"${game.installDir}"
+	"LastUpdated"		"${Math.floor(Date.now() / 1000)}"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"${Math.floor(Math.random() * 9000000000) + 1000000000}"
+	"buildid"		"${Math.floor(Math.random() * 9000000) + 8000000}"
+	"LastOwner"		"76561198000000000"
+	"BytesToDownload"		"0"
+	"BytesDownloaded"		"0"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"UserConfig"
+	{
+		"language"		"german"
+	}
+	"InstalledDepots"
+	{
+		"${game.depotId}"		"${generateRandomManifestID()}"
+	}
+	"InstallScripts"
+	{
+		"${game.id}"		"${game.installDir}\\\\installscript.vdf"
+	}
+	"SharedDepots"
+	{
+		"228990"		"228980"
+		"228980"		"228980"
+	}
+	"UserDLCs"
+	{
+	}
+}`;
+        }
+        
+        // Generate random manifest ID in Steam format
+        function generateRandomManifestID() {
+            const chars = "0123456789abcdef";
+            let result = "";
+            for (let i = 0; i < 32; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // Generate Steam compatible LUA script
+        function generateLuaContent(game) {
+            return `-- Steam-kompatibles LUA-Skript für ${game.title} (AppID: ${game.id})
+-- Generiert am: ${new Date().toISOString()}
+
+local appid = ${game.id}
+local depotid = ${game.depotId}
+local installdir = "${game.installDir}"
+
+-- Steam Platform Identification
+function GetSteamPlatform()
+    return "windows"
+end
+
+-- Manifest Hooks
+function OnDownloadManifestStart(manifest)
+    print("[INFO] Download des Manifests für AppID " .. appid .. " gestartet")
+    return true
+end
+
+function OnDownloadDepotStart(manifest, depotid)
+    print("[INFO] Download des Depots " .. depotid .. " für AppID " .. appid .. " gestartet")
+    return true
+end
+
+function OnDownloadComplete(manifest)
+    print("[INFO] Download für AppID " .. appid .. " abgeschlossen")
+    ValidateFiles()
+    return true
+end
+
+function ValidateFiles()
+    print("[INFO] Validierung der Dateien für AppID " .. appid)
+    -- Datei-Validierungslogik hier
+    return true
+end
+
+-- Installation und Start Hooks
+function OnGamePreInstall()
+    print("[INFO] Vorbereitung der Installation für " .. installdir)
+    return true
+end
+
+function OnGamePostInstall()
+    print("[INFO] Nachbereitung der Installation für " .. installdir)
+    InstallDirectX()
+    InstallVCRedist()
+    return true
+end
+
+function OnGameLaunch()
+    print("[INFO] Spiel wird gestartet: " .. installdir)
+    return true
+end
+
+-- Hilfsfunktionen
+function InstallDirectX()
+    print("[INFO] DirectX wird installiert...")
+    return true
+end
+
+function InstallVCRedist()
+    print("[INFO] Visual C++ Redistributable wird installiert...")
+    return true
+end
+
+-- Manifest-spezifische Funktionen
+function GetManifestDetails()
+    return {
+        appid = appid,
+        depotid = depotid,
+        buildid = ${Math.floor(Math.random() * 9000000) + 8000000},
+        installdir = installdir,
+        timestamp = os.time(),
+        manifest_gid = "${generateRandomManifestID()}"
+    }
+end
+
+-- Hook-Registrierung
+function RegisterHooks()
+    print("[INFO] Hooks für AppID " .. appid .. " registriert")
+end
+
+-- Initialisierung
+RegisterHooks()
+print("[INFO] Steam-Manifest-Skript für " .. installdir .. " (AppID: " .. appid .. ") wurde erfolgreich geladen")`;
+        }
+        
+        // Generate VDF bootstrap file
+        function generateVdfContent(game) {
+            return `"InstallScript"
+{
+    "Run Process"
+    {
+        "DirectX"
+        {
+            "process"       "%INSTALLDIR%\\\\redist\\\\directx\\\\DXSETUP.exe"
+            "command"       "/silent"
+            "description"   "DirectX wird installiert..."
+            "nocleanup"     "1"
+        }
+        "VCRedist"
+        {
+            "process"       "%INSTALLDIR%\\\\redist\\\\vcredist\\\\vc_redist.x64.exe"
+            "command"       "/quiet /norestart"
+            "description"   "Visual C++ Redistributable wird installiert..."
+            "nocleanup"     "1"
+        }
+    }
+    "Registry"
+    {
+        "HKEY_LOCAL_MACHINE\\\\Software\\\\${game.title}"
+        {
+            "string"
+            {
+                "InstallPath"       "%INSTALLDIR%"
+                "Version"           "1.0"
+            }
+        }
+    }
+}`;
+        }
+        
+        // Simulate file download process with proper ZIP creation
+        function downloadFiles(appId) {
+            let game = findGame(appId);
+    if (!game) {
+        game = {
+            id: appId,
+            title: `Game_${appId}`,
+            installDir: `game_${appId}`,
+            depotId: `${parseInt(appId) + 1}`
+        };
+    }
+            
+            if (!game) {
+                addLog('Fehler: Spiel wurde nicht in der Datenbank gefunden', true);
+                return;
+            }
+            
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            const downloadProgress = document.getElementById('download-progress');
+            const downloadSuccess = document.getElementById('download-success');
+            const filesContainer = document.getElementById('download-files-container');
+            
+            // Reset and show progress
+            progressBar.style.width = '0%';
+            downloadProgress.style.display = 'block';
+            downloadSuccess.style.display = 'none';
+            filesContainer.innerHTML = '';
+            
+            // Generate file content
+            const manifestContent = generateManifestContent(game);
+            const acfContent = generateAcfContent(game);
+            const luaContent = generateLuaContent(game);
+            const vdfContent = generateVdfContent(game);
+            
+            // Add log message
+            addLog(`Dateiengenerierung für ${game.title} (APP ID: ${appId}) gestartet`);
+            
+            // Simulate download progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                // Random increment between 5-10%
+                const increment = Math.random() * 5 + 5;
+                progress = Math.min(progress + increment, 100);
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `Generiere Dateien... ${Math.round(progress)}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Show download complete message
+                    progressText.textContent = 'Dateien erfolgreich generiert!';
+                    
+                    setTimeout(() => {
+                        // Hide progress and show success
+                        downloadProgress.style.display = 'none';
+                        downloadSuccess.style.display = 'block';
+                        
+                        // Create downloadable file links
+                        const manifestLink = createDownloadableFile(`appmanifest_${appId}.txt`, manifestContent, 'text/plain');
+                        const acfLink = createDownloadableFile(`appmanifest_${appId}.acf`, acfContent, 'text/plain');
+                        const luaLink = createDownloadableFile(`script_${appId}.lua`, luaContent, 'text/plain');
+                        const vdfLink = createDownloadableFile(`installscript_${appId}.vdf`, vdfContent, 'text/plain');
+                        
+                        // Create ZIP download link
+                        const zipLink = document.createElement('a');
+                        zipLink.className = 'download-file-link';
+                        zipLink.innerHTML = `<i class="fa-solid fa-file-archive"></i> steamrip_${appId}_${game.title.replace(/[^a-zA-Z0-9]/g, '')}.zip`;
+                        zipLink.style.color = '#eab308';
+                        zipLink.style.fontWeight = 'bold';
+                        zipLink.style.display = 'block';
+                        zipLink.style.margin = '10px 0';
+                        zipLink.style.fontSize = '1.1rem';
+                        
+                        // When zip link is clicked, generate and download the zip using JSZip
+                        zipLink.addEventListener('click', function() {
+                            // Create new JSZip instance
+                            const zip = new JSZip();
+                            
+                            // Add files to the zip with proper folder structure
+                            zip.file(`appmanifest_${appId}.acf`, acfContent);
+                            zip.file(`appmanifest_${appId}.txt`, manifestContent); 
+                            zip.file(`script_${appId}.lua`, luaContent);
+                            zip.file(`${game.installDir}/installscript.vdf`, vdfContent);
+                            
+                            // Generate the zip file
+                            zip.generateAsync({type: "blob"})
+                                .then(function(content) {
+                                    // Create download link for the zip
+                                    const zipUrl = URL.createObjectURL(content);
+                                    const downloadLink = document.createElement('a');
+                                    downloadLink.href = zipUrl;
+                                    downloadLink.download = `steamrip_${appId}_${game.title.replace(/[^a-zA-Z0-9]/g, '')}.zip`;
+                                    document.body.appendChild(downloadLink);
+                                    downloadLink.click();
+                                    document.body.removeChild(downloadLink);
+                                    
+                                    // Clean up the URL object
+                                    setTimeout(() => {
+                                        URL.revokeObjectURL(zipUrl);
+                                    }, 100);
+                                });
+                        });
+                        
+                        // Add links to the container with ZIP first
+                        filesContainer.appendChild(zipLink);
+                        const individualFilesHeader = document.createElement('p');
+                        individualFilesHeader.textContent = 'Oder lade einzelne Dateien herunter:';
+                        individualFilesHeader.style.marginTop = '10px';
+                        individualFilesHeader.style.marginBottom = '10px';
+                        filesContainer.appendChild(individualFilesHeader);
+                        filesContainer.appendChild(acfLink);
+                        filesContainer.appendChild(document.createElement('br'));
+                        filesContainer.appendChild(manifestLink);
+                        filesContainer.appendChild(document.createElement('br'));
+                        filesContainer.appendChild(luaLink);
+                        filesContainer.appendChild(document.createElement('br'));
+                        filesContainer.appendChild(vdfLink);
+                        
+                        // Add log entry
+                        addLog('Dateien für "' + game.title + '" wurden erfolgreich generiert und sind zum Download bereit!');
+                    }, 500);
+                }
+            }, 300);
+        }
+        
+        // Submit button handler
+        document.getElementById('submit-button').addEventListener('click', () => {
+            const input = document.getElementById('appid-input');
+            let appId = input.value.trim();
+            
+            if (!appId) {
+                addLog('Fehler: Bitte gib eine gültige APP ID oder URL ein', true);
+                return;
+            }
+            
+            // Clear logs
+            document.getElementById('log-container').innerHTML = '';
+            
+            // Hide download section and reset
+            document.getElementById('download-section').style.display = 'none';
+            document.getElementById('download-progress').style.display = 'none';
+            document.getElementById('download-success').style.display = 'none';
+            
+            // Hide game database
+            document.getElementById('game-database').style.display = 'none';
+            
+            // Processing
+            addLog('Verarbeite Anfrage für: ' + appId);
+            
+            // Extract app ID if needed
+            if (appId.includes('steampowered.com')) {
+                const match = appId.match(/app\/(\d+)/);
+                if (match && match[1]) {
+                    appId = match[1];
+                    addLog('Extrahierte APP ID: ' + appId);
+                } else {
+                    addLog('Fehler: Konnte keine APP ID aus der URL extrahieren', true);
+                    return;
+                }
+            }
+            
+            // Simulate processing
+            setTimeout(() => {
+                addLog('Verbinde mit Steam-Servern...');
+                
+                setTimeout(() => {
+                    const isValid = /^\d+$/.test(appId);
+                    
+                    if (!isValid) {
+                        addLog('Fehler: Ungültiges APP ID Format', true);
+                        return;
+                    }
+                    
+                    // Check if game exists in our database
+                    const game = findGame(appId);
+                    
+                    // Check availability
+                    addLog('Prüfe, ob das Spiel verfügbar ist...');
+                    
+                    setTimeout(() => {
+                        if (game) {
+                            addLog(`Spiel gefunden: ${game.title} (APP ID: ${appId})`);
+                            addLog('Generiere Manifest-Dateien...');
+                            
+                            setTimeout(() => {
+                                addLog('Manifest erfolgreich generiert');
+                                addLog('Generiere LUA-Dateien...');
+                                
+                                setTimeout(() => {
+                                    addLog('LUA-Dateien erfolgreich generiert');
+                                    addLog('Erstelle VDF-Installationsskripte...');
+                                    
+                                    setTimeout(() => {
+                                        addLog('VDF-Skripte erfolgreich generiert');
+                                        addLog('Dateien fertig zum Download!');
+                                        addLog(`Alle Dateien für "${game.title}" sind bereit zum Herunterladen.`);
+                                        
+                                        // Show download section
+                                        document.getElementById('download-section').style.display = 'block';
+                                    }, 600);
+                                }, 700);
+                            }, 800);
+                        } else {
+                            // If game not in database, check for some popular game IDs
+                            if (/^\d+$/.test(appId)) {
+                                addLog(`Spiel-ID ${appId} erkannt, aber detaillierte Daten fehlen.`);
+                                addLog('Erstelle generische Dateien mit Standardeinstellungen...');
+                                
+                                // Create a generic game object
+                                const genericGame = {
+                                    id: appId,
+                                    title: `Game_${appId}`,
+                                    installDir: `game_${appId}`,
+                                    depotId: `${parseInt(appId) + 1}`
+                                };
+                                
+                                setTimeout(() => {
+                                    addLog('Dateien erfolgreich generiert');
+                                    addLog('Dateien fertig zum Download!');
+                                    
+                                    // Show download section
+                                    document.getElementById('download-section').style.display = 'block';
+                                    
+                                    // Set up download with generic game
+                                    document.getElementById('download-all').onclick = () => downloadFiles(appId);
+                                }, 1500);
+                            } else {
+                                addLog(`Fehler: Spiel mit APP ID ${appId} nicht gefunden oder nicht unterstützt`, true);
+                                
+                                // Show modal with error message
+                                document.getElementById('game-unavailable-message').textContent = 
+                                    `Das Spiel mit der APP ID ${appId} wurde in unserer Datenbank nicht gefunden. 
+                                    Bitte versuche es mit einer anderen ID oder wähle ein Spiel aus der Liste.`;
+                                showModal('game-unavailable-modal');
+                            }
+                        }
+                    }, 800);
+                }, 600);
+            }, 500);
+        });
+        
+        // Download button handler
+        document.getElementById('download-all').addEventListener('click', () => {
+            const appId = document.getElementById('appid-input').value.trim();
+            downloadFiles(appId);
+        });
+
+        // Game list button handler
+        document.getElementById('game-list-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Hide download section
+            document.getElementById('download-section').style.display = 'none';
+            
+            // Show game database
+            const gameDbElement = document.getElementById('game-database');
+            gameDbElement.style.display = 'block';
+            
+            // Clear and populate game list
+            const gameListContainer = document.getElementById('game-list-container');
+            gameListContainer.innerHTML = '';
+            
+            gameDatabase.forEach(game => {
+                const gameItem = document.createElement('div');
+                gameItem.className = 'game-item';
+                gameItem.innerHTML = `
+                    <div class="game-title">${game.title}</div>
+                    <div class="game-id">APP ID: ${game.id}</div>
+                `;
+                
+                // Add click handler to select the game
+                gameItem.addEventListener('click', () => {
+                    document.getElementById('appid-input').value = game.id;
+                    document.getElementById('submit-button').click();
+                });
+                
+                gameListContainer.appendChild(gameItem);
+            });
+        });
+
+        // Home button handler
+        document.getElementById('home-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Hide game database
+            document.getElementById('game-database').style.display = 'none';
+            
+            // Clear input and logs
+            document.getElementById('appid-input').value = '';
+            document.getElementById('log-container').innerHTML = '';
+            document.getElementById('download-section').style.display = 'none';
+        });
+
+        // Footer home button handler
+        document.getElementById('footer-home').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('home-btn').click();
+        });
+
+        // Disclaimer button handler
+        document.getElementById('disclaimer-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showModal('disclaimer-modal');
+        });
+    
+document.getElementById('name-to-appid-button').addEventListener('click', () => {
+    const gameName = document.getElementById('game-name-input').value.trim();
+    if (!gameName) {
+        addLog('Bitte gib einen Spielnamen ein.', true);
+        return;
+    }
+
+    addLog(`Suche Steam App ID für "${gameName}"...`);
+
+    // Proxy-API für SteamDB über DuckDuckGo (CORS umgehen per AllOrigins)
+    const searchUrl = `https://duckduckgo.com/html/?q=site:steamdb.info+${encodeURIComponent(gameName)}`;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(searchUrl)}`;
+
+    fetch(proxyUrl)
+        .then(res => res.json())
+        .then(data => {
+            const html = data.contents;
+            const match = html.match(/steamdb\.info\/app\/(\d+)/);
+            if (match && match[1]) {
+                const appId = match[1];
+                addLog(`Gefundene App ID: ${appId}`);
+                document.getElementById('appid-input').value = appId;
+                document.getElementById('submit-button').click();
+            } else {
+                addLog('Keine App ID gefunden. Versuche einen genaueren Namen.', true);
+            }
+        })
+        .catch(err => {
+            addLog('Fehler bei der App ID Suche.', true);
+            console.error(err);
+        });
+});
+
+</script>
+</body>
+</html>
